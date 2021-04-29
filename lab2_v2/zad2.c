@@ -700,7 +700,7 @@ void hybrid_sort(int n, int number[n],int left, int right, bool increase, int* c
 	if(right<left+SIZE_TO_SWITCH_TO_INSETION_SORT){
 		for(int i=left;i<=right;i++)
 		{
-			for(int j=i;j>0;j--) //j>left
+			for(int j=i;j>left;j--) //j>0
 			{
 				if(number[j]<number[j-1])
 				{
