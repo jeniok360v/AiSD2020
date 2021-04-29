@@ -495,9 +495,9 @@ void dual_pivot_quick_sort(int n, int number[n],int left,int right, bool increas
 		//pair *p = double_partition(number, left, right, compare, swap);
 		double_partition(number, left, right, compare, swap, i_ret, j_ret);
 
-		dual_pivot_quick_sort(n, number, left, (*i_ret)-1,          increase, compare, swap);
+		dual_pivot_quick_sort(n, number, left,       (*i_ret)-1, increase, compare, swap);
 		dual_pivot_quick_sort(n, number, (*i_ret)+1, (*j_ret)-1, increase, compare, swap);
-		dual_pivot_quick_sort(n, number, (*j_ret)+1, right,         increase, compare, swap);
+		dual_pivot_quick_sort(n, number, (*j_ret)+1, right,      increase, compare, swap);
 	}
 	else if(right-left==1){
 		if(number[left]>number[right]){
@@ -700,7 +700,7 @@ void hybrid_sort(int n, int number[n],int left, int right, bool increase, int* c
 	if(right<left+SIZE_TO_SWITCH_TO_INSETION_SORT){
 		for(int i=left;i<=right;i++)
 		{
-			for(int j=i;j>0;j--)
+			for(int j=i;j>0;j--) //j>left
 			{
 				if(number[j]<number[j-1])
 				{
