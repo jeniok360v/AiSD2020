@@ -19,42 +19,70 @@ struct bst_node* find_minimum(struct bst_node *root);
 struct bst_node* find_maximum(struct bst_node *root);
 struct bst_node* bst_new_node(char x[]);
 struct bst_node* bst_insert(struct bst_node *root, char x[]);
+struct bst_node* bst_insert_with_convertion(struct bst_node *root, char x[]);
 struct bst_node* bst_delete(struct bst_node *root, char x[]);
 struct bst_node* bst_inOrderSuccessor(struct bst_node* root, char x[]);
-void bst_insert_convert(char x[]);
+void bst_insert_convert(char **x);
 void inorder(struct bst_node *root);
 void print(struct bst_node *root);
 
 int main()
 {
+    FILE *fp;
+    long lSize;
+    char *buffer;
+
+    fp = fopen ( "input" , "rb" );
+    if( !fp ) perror("input"),exit(1);
+
+    fseek( fp , 0L , SEEK_END);
+    lSize = ftell( fp );
+    rewind( fp );
+
+    /* allocate memory for entire content */
+    buffer = calloc( 1, lSize+1 );
+    if( !buffer ) fclose(fp),fputs("memory alloc fails",stderr),exit(1);
+
+    /* copy the file into the buffer */
+    if( 1!=fread( buffer , lSize, 1 , fp) )
+      fclose(fp),free(buffer),fputs("entire read fails",stderr),exit(1);
+
+    /* do your work here, buffer is a string contains the whole text */ 
+    char *string[256];           
+    char delimit[]=" ,.;:!?-()[]{}<>\'\"\n";
+    int i = 0, j = 0;
+                                       
+    string[i]=strtok(buffer,delimit);    // 5) Make use of i to be explicit 
+    while(string[i]!=NULL)                    
+    {
+        printf("string [%d]=%s\n",i,string[i]);
+        i++;
+        string[i]=strtok(NULL,delimit);
+    }
+    for (j=0;j<i;j++)
+        //printf("%s ", string[j]);
+
+
+
+    fclose(fp);
+    //free(buffer);
+
+
+
     /*
-                   20
-                 /    \
-                /      \
-               5       30
-             /   \     /\
-            /     \   /  \
-           1      15 25  40
-                /          \
-               /            \
-              9             45
-            /   \          /
-           /     \        /
-          7      12      42
-    */
     struct bst_node *root = NULL;
-    root = bst_new_node("20");
-    bst_insert(root,"5" );
-    bst_insert(root,"1" );
-    bst_insert(root,"15");
-    bst_insert(root,"9" );
-    bst_insert(root,"7" );
-    bst_insert(root,"12");
-    bst_insert(root,"30");
-    bst_insert(root,"25");
-    bst_insert(root,"40");
-    bst_insert(root,"45");
-    bst_insert(root,"42");
+    root = bst_new_node("2230");
+    bst_insert_with_convertion(root,"three" );
+    bst_insert_with_convertion(root,"1232" );
+    bst_insert_with_convertion(root,"15221");
+    bst_insert_with_convertion(root,"911" );
+    bst_insert_with_convertion(root,"712" );
+    bst_insert_with_convertion(root,"412");
+    bst_insert_with_convertion(root,"320");
+    bst_insert_with_convertion(root,"245");
+    bst_insert_with_convertion(root,"410");
+    bst_insert_with_convertion(root,"4225");
+    bst_insert_with_convertion(root,"4322");
 
     printf("%i\n\n", bst_find(root, "42"));
     print(bst_inOrderSuccessor(root,"45"));
@@ -69,71 +97,10 @@ int main()
     printf("\n");
 
     root = bst_delete(root, "1");
-    /*
-                   20
-                 /    \
-                /      \
-               5       30
-                 \     /\
-                  \   /  \
-                  15 25   40
-                /           \
-               /             \
-              9              45
-            /   \           /
-           /     \         /
-          7      12       42
-    */
-
     root = bst_delete(root, "40");
-    /*
-                   20
-                 /    \
-                /      \
-               5       30
-                 \     /\
-                  \   /  \
-                  15 25  45
-                 /       / 
-                /       /   
-               9       42    
-             /   \          
-            /     \        
-           7      12      
-    */
-
     root = bst_delete(root, "45");
-    /*
-                   20
-                 /    \
-                /      \
-               5       30
-                 \     /\
-                  \   /  \
-                  15 25  42
-                 /          
-                /            
-               9            
-             /   \          
-            /     \        
-           7      12      
-    */
     root = bst_delete(root, "9");
     inorder(root);
-    /*
-                   20
-                 /    \
-                /      \
-               5       30
-                 \     /\
-                  \   /  \
-                  15 25  42
-                 /          
-                /            
-               12            
-             /             
-            /             
-           7            
     */
     printf("\n");
     return 0;
@@ -196,6 +163,7 @@ struct bst_node* bst_new_node(char x[])
 {
     struct bst_node *p;
     p = malloc(sizeof(struct bst_node));
+    //bst_insert_convert(&x);
     strcpy(p->data, x);
     //p->data = x;
     p->left_child = NULL;
@@ -206,7 +174,7 @@ struct bst_node* bst_new_node(char x[])
 
 struct bst_node* bst_insert(struct bst_node *root, char x[])
 {
-    bst_insert_convert(x);
+    //bst_insert_convert(&x);
     if(root==NULL)
         return bst_new_node(x);
     else if(strcmp(x, root->data)>0) // x is greater. Should be inserted to right
@@ -214,6 +182,11 @@ struct bst_node* bst_insert(struct bst_node *root, char x[])
     else // x is smaller should be inserted to left
         root->left_child = bst_insert(root->left_child,x);
     return root;
+}
+
+struct bst_node* bst_insert_with_convertion(struct bst_node *root, char x[]){
+    bst_insert_convert(&x);
+    return bst_insert(root, x);
 }
 
 struct bst_node* bst_delete(struct bst_node *root, char x[])
@@ -258,7 +231,7 @@ struct bst_node* bst_inOrderSuccessor(struct bst_node* root, char x[])
 {
     struct bst_node* n = bst_search(root, x);
     if(n == NULL){
-        printf("\nWTF\n");
+        printf("\nNo such element!\n");
         return NULL;
     }
     if (n->right_child != NULL)
@@ -283,8 +256,11 @@ struct bst_node* bst_inOrderSuccessor(struct bst_node* root, char x[])
     return succ;
 }
 
-void bst_insert_convert(char x[]){
-    int length = (int)strlen(x);
+void bst_insert_convert(char** temp){
+    int length = (int)strlen(*temp);
+    printf("strlen(%s)=%i\n", *temp, length);
+    char* x = calloc(length+1, sizeof(char));
+    memcpy(x, *temp, length+1);
     if(length>1){
         if(!isalpha(x[length-1])){
             x[length-1]='\0';
@@ -298,6 +274,7 @@ void bst_insert_convert(char x[]){
             x[0]='\0';
         }
     }
+    *temp = x;
     return;
 }
 
