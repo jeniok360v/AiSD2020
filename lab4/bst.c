@@ -13,6 +13,9 @@ struct bst_node
     struct bst_node *left_child;
 };
 
+void load_file(struct bst_node **root, char filename[]);
+
+
 int bst_find(struct bst_node *root, char x[]);
 struct bst_node* bst_search(struct bst_node *root, char x[]);
 struct bst_node* find_minimum(struct bst_node *root);
@@ -23,17 +26,35 @@ struct bst_node* bst_insert_with_convertion(struct bst_node *root, char x[]);
 struct bst_node* bst_delete(struct bst_node *root, char x[]);
 struct bst_node* bst_inOrderSuccessor(struct bst_node* root, char x[]);
 void bst_insert_convert(char **x);
-void inorder(struct bst_node *root);
+void bst_inorder(struct bst_node *root);
 void print(struct bst_node *root);
 
-int main()
+int main(int argc, char *argv[])
 {
+    struct bst_node *root = NULL;
+    load_file(&root, "sample.txt");
+    bst_inorder(root);
+    printf("\n");
+
+    root = bst_delete(root, "three");
+    root = bst_delete(root, "three");
+    root = bst_delete(root, "three");
+    root = bst_delete(root, "Three");
+    bst_inorder(root);
+
+    printf("\n");
+    return 0;
+}
+
+
+
+void load_file(struct bst_node **root, char filename[]){
     FILE *fp;
     long lSize;
     char *buffer;
 
-    fp = fopen ( "input" , "rb" );
-    if( !fp ) perror("input"),exit(1);
+    fp = fopen ( filename , "rb" );
+    if( !fp ) perror(filename),exit(1);
 
     fseek( fp , 0L , SEEK_END);
     lSize = ftell( fp );
@@ -46,6 +67,7 @@ int main()
     /* copy the file into the buffer */
     if( 1!=fread( buffer , lSize, 1 , fp) )
       fclose(fp),free(buffer),fputs("entire read fails",stderr),exit(1);
+    fclose(fp);
 
     /* do your work here, buffer is a string contains the whole text */ 
     char *string[256];           
@@ -59,51 +81,15 @@ int main()
         i++;
         string[i]=strtok(NULL,delimit);
     }
-    for (j=0;j<i;j++)
-        //printf("%s ", string[j]);
 
-
-
-    fclose(fp);
-    //free(buffer);
-
-
-
-    /*
-    struct bst_node *root = NULL;
-    root = bst_new_node("2230");
-    bst_insert_with_convertion(root,"three" );
-    bst_insert_with_convertion(root,"1232" );
-    bst_insert_with_convertion(root,"15221");
-    bst_insert_with_convertion(root,"911" );
-    bst_insert_with_convertion(root,"712" );
-    bst_insert_with_convertion(root,"412");
-    bst_insert_with_convertion(root,"320");
-    bst_insert_with_convertion(root,"245");
-    bst_insert_with_convertion(root,"410");
-    bst_insert_with_convertion(root,"4225");
-    bst_insert_with_convertion(root,"4322");
-
-    printf("%i\n\n", bst_find(root, "42"));
-    print(bst_inOrderSuccessor(root,"45"));
-    print(bst_inOrderSuccessor(root,"25"));
-    print(bst_inOrderSuccessor(root,"42"));
-    print(bst_inOrderSuccessor(root,"12"));
-    printf("\n\n");
-    print(find_minimum(root));
-    print(find_maximum(root));
-
-    inorder(root);
-    printf("\n");
-
-    root = bst_delete(root, "1");
-    root = bst_delete(root, "40");
-    root = bst_delete(root, "45");
-    root = bst_delete(root, "9");
-    inorder(root);
-    */
-    printf("\n");
-    return 0;
+    //struct bst_node *root = NULL;
+    bst_insert_convert(&string[0]);
+    *root = bst_new_node(string[0]);
+    for (j=1;j<i;j++){
+        bst_insert_with_convertion(*root, string[j]);
+    }
+    //bst_inorder(*root);
+    free(buffer);
 }
 
 int bst_find(struct bst_node *root, char x[])
@@ -278,13 +264,13 @@ void bst_insert_convert(char** temp){
     return;
 }
 
-void inorder(struct bst_node *root)
+void bst_inorder(struct bst_node *root)
 {
     if(root!=NULL) // checking if the root is not null
     {
-        inorder(root->left_child); // visiting left child
+        bst_inorder(root->left_child); // visiting left child
         printf(" %s ", root->data); // printing data at root
-        inorder(root->right_child);// visiting right child
+        bst_inorder(root->right_child);// visiting right child
     }
 }
 
