@@ -5,6 +5,7 @@
 
 #define MAX_SIZE 101
 
+int tree_size = 0;
 
 struct bst_node
 {
@@ -12,6 +13,27 @@ struct bst_node
     struct bst_node *right_child; 
     struct bst_node *left_child;
 };
+
+typedef enum Color { BLACK, RED} Color;
+
+typedef struct rbt_node{
+    struct rbt_node* p;
+    struct rbt_node* left;
+    struct rbt_node* right;
+    Color color;
+    char* value;
+} rbt_node;
+
+/*
+typedef struct rbtTree{
+    rbtNode* root;
+    rbtNode* nil;
+    int size;
+    //ewentualne wzbogacenia
+} rbtTree;
+*/
+
+
 
 void load_file(struct bst_node **root, char filename[]);
 
