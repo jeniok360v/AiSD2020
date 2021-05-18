@@ -24,12 +24,13 @@ typedef struct rbt_node{
     char* value;
 } rbt_node;
 
+
+
 /*
 typedef struct rbtTree{
     rbtNode* root;
     rbtNode* nil;
     int size;
-    //ewentualne wzbogacenia
 } rbtTree;
 */
 
