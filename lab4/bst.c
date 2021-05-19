@@ -26,16 +26,6 @@ typedef struct rbt_node{
 
 
 
-/*
-typedef struct rbtTree{
-    rbtNode* root;
-    rbtNode* nil;
-    int size;
-} rbtTree;
-*/
-
-
-
 void load_file(struct bst_node **root, char filename[]);
 
 
