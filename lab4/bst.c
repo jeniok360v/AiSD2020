@@ -21,14 +21,12 @@ typedef struct rbt_node{
     struct rbt_node* left;
     struct rbt_node* right;
     Color color;
-    char* value;
+    char data[MAX_SIZE];
 } rbt_node;
 
 
 
 void load_file(struct bst_node **root, char filename[]);
-
-
 int bst_find(struct bst_node *root, char x[]);
 struct bst_node* bst_search(struct bst_node *root, char x[]);
 struct bst_node* find_minimum(struct bst_node *root);
@@ -41,6 +39,10 @@ struct bst_node* bst_inOrderSuccessor(struct bst_node* root, char x[]);
 void bst_insert_convert(char **x);
 void bst_inorder(struct bst_node *root);
 void print(struct bst_node *root);
+
+
+
+
 
 int main(int argc, char *argv[])
 {
