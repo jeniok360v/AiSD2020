@@ -8,31 +8,10 @@
 #define MODULO 128
 #define N 200
 
-///////////////////////////////////////////////////////// HASH //////////////////////////////////////////////////////////////
-
-uint32_t jenkins_one_at_a_time_hash(char *key, size_t len){
-    uint32_t hash, i;
-    for(hash = i = 0; i < len; ++i)
-    {
-        hash += key[i];
-        hash += (hash << 10);
-        hash ^= (hash >> 6);
-    }
-    hash += (hash << 3);
-    hash ^= (hash >> 11);
-    hash += (hash << 15);
-    return hash;
-}
-
-
-
-///////////////////////////////////////////////////////// structs //////////////////////////////////////////////////////////////
 
 enum treeType  { BST, RBT, HMAP}; 
 typedef enum Color { BLACK, RED} Color;
 
-
-//List
 
 typedef struct ListNode {
     char* value;
@@ -105,18 +84,115 @@ typedef struct Tree{
 
 
 
+uint32_t jenkins_one_at_a_time_hash(char *key, size_t len);
 
-//////////////////////////////////////////////////////////////////
+void createList(List* list);
+void addValueList(List* list, char* val);
+char* popMiddleValueList(List *list);
+int deleteValueList(List* list, char* val);
+void findValueList(List* list, char* val);
+void destroyList(List* list);
+void drawList(List* list);
 
+bstNode* searchBST(bstTree* t, char* value);
+void findBST(bstTree* t, char* value);
+bstNode* minimumBST(bstNode* n);
+void minBST(bstTree* t);
+bstNode* maximumBST(bstNode* n);
+void maxBST(bstTree* t);
+bstNode* successorBST(bstNode* x);
+void getSuccessorBST(bstTree* t, char* value);
+void transplantBST(bstTree* t, bstNode* a, bstNode* b);
+void insertBST(bstTree* t, char* key);
+void deleteBST(bstTree* t, char* key);
+void loadBST(bstTree* t, char* filename);
+void del_loadBST(bstTree* t, char* filename);
+void inorderByNodeBST(bstNode* n);
+void inorderBST(bstTree* t);
+void createBST(Tree* t);
+void deleteTreeByNodeBST(bstNode* n);
+void deleteTreeBST(Tree* t);
+void deleteTreeBST2(bstTree* t);
 
-bool compare(char* a, char* b);
+void createRBT(Tree* t);
+void createRBT2(rbtTree* t);
+rbtNode* searchRBT(rbtTree* t, char* value);
+void findRBT(rbtTree* t, char* value);
+rbtNode* minimumRBT(rbtNode* nil, rbtNode* n);
+void minRBT(rbtTree* t);
+rbtNode* maximumRBT(rbtNode* nil, rbtNode* n);
+void maxRBT(rbtTree* t);
+rbtNode* successorRBT(rbtNode* nil, rbtNode* x);
+void getSuccessorRBT(rbtTree* t, char* value);
+void inorderByNodeRBT(rbtNode* nil, rbtNode* n);
+void inorderRBT(rbtTree* t);
+void reverseInorderToArrayByNodeRBT(rbtNode* nil,rbtNode* n, char** array);
+void reverseInorderToArrayRBT(rbtTree* t, char** array);
+void deleteTreeByNodeRBT(rbtNode* nil, rbtNode* n);
+void deleteTreeRBT(Tree* t);
+void deleteTreeRBT2(rbtTree *t);
+void leftRotateRBT(rbtTree* t, rbtNode* x);
+void rightRotateRBT(rbtTree* t, rbtNode* x);
+void insertRBT(rbtTree* t, char* key);
 void insertFixRBT(rbtTree* t, rbtNode* z);
-void deleteFixRBT(rbtTree* t, rbtNode* z);
+void transplantRBT(rbtTree* t, rbtNode* a, rbtNode* b);
+int deleteRBT(rbtTree* t, char* key);
+void deleteFixRBT(rbtTree* t, rbtNode* x);
+void loadRBT(rbtTree* t, char* filename);
+void del_loadRBT(rbtTree* t, char* filename);
+
+
+void createHMAP(Tree* t, int modulo, int n);
+int hash(char* key, int modulo);
+void listToRBT(hashListElement* e);
+void rbtToList(hashListElement* e);
+void insertHMAP(hashMap* m, char* key2);
+void deleteHMAP(hashMap* m, char* key2);
+void findHMAP(hashMap* m, char* key2);
+void destroyHMAP(hashMap* m);
+void loadHMAP(hashMap* m, char* filename);
+void del_loadHMAP(hashMap* m, char* filename);
+
+int length(char* word);
 char* checkAndCopy(char* key);
-char* checkAndCopy2(char* key);
+char* checkAndCopy2(char* key);                      
+bool compare(char* a, char* b);
+void chooseTree(char* argv[], Tree* tree);
+void destroyTree(Tree* tree);
+void executeCommands(int n, Tree* tree);
 
 
-////////////////////////////////////////////LIST ////////////////////////////////
+int main (int argc, char* argv[]){
+    if(argc != 3) return 1;    
+
+    Tree* tree = malloc(sizeof(Tree));
+    chooseTree(argv, tree);    
+    
+    int n;
+    scanf("%d",&n);
+    executeCommands(n, tree); 
+    
+    destroyTree(tree);
+    free(tree);
+    
+    return 0;
+}
+
+
+uint32_t jenkins_one_at_a_time_hash(char *key, size_t len){
+    uint32_t hash, i;
+    for(hash = i = 0; i < len; ++i)
+    {
+        hash += key[i];
+        hash += (hash << 10);
+        hash ^= (hash >> 6);
+    }
+    hash += (hash << 3);
+    hash ^= (hash >> 11);
+    hash += (hash << 15);
+    return hash;
+}
+
 
 
 void createList(List* list){
@@ -223,7 +299,6 @@ void drawList(List* list){
     printf(" NULL\n");
 }
 
-///////////////////////////////////////////////////////// BST ////////////////////////////////////////////////////////////// 
 
 bstNode* searchBST(bstTree* t, char* value) {
     bstNode* tmp = t->root;
@@ -376,6 +451,30 @@ void loadBST(bstTree* t, char* filename){
     }
 }
 
+void del_loadBST(bstTree* t, char* filename){
+    FILE *filein;
+    if((filein = fopen(filename, "r")) == NULL){
+        printf("file %s doesn't exist.\n",filename);
+    }
+    char* s1;
+    strcpy(s1, "shuf "); 
+    strcat(s1, filename);
+    strcat(s1, " >sp4.txt");
+    system(s1);
+    
+    //system("shuf aspell_wordlist.txt >sp3.txt", filename);
+    FILE *file;
+    if((file = fopen("sp4.txt", "r")) == NULL){
+        printf("file %s doesn't exist.\n",filename);
+    }   
+    else {
+        char word[101];
+        while(fscanf(file,"%100s",word) != EOF){
+            deleteBST(t, word);
+        }
+    }
+}
+
 void inorderByNodeBST(bstNode* n){
     if(!n) 
         return;
@@ -414,9 +513,6 @@ void deleteTreeBST2(bstTree* t){
     bstNode* n = t->root;
     deleteTreeByNodeBST(n);
 }   
-
-
-///////////////////////////////////////////////////////// RBT //////////////////////////////////////////////////////////////
 
 void createRBT(Tree* t){
     t->type = RBT;
@@ -778,7 +874,42 @@ void loadRBT(rbtTree* t, char* filename){
         }
     }
 }
-/////////////////////////////////////////////////////////HMAP/////////////////////////////////////////////////////
+
+void del_loadRBT(rbtTree* t, char* filename){
+    /*
+    FILE *filein;
+    if((filein = fopen(filename, "r")) == NULL){
+        printf("file %s doesn't exist.\n",filename);
+    }
+    char* s1;
+    strcpy(s1, "shuf "); 
+    strcat(s1, filename);
+    strcat(s1, " >sp4.txt");
+    fprintf(stderr, "muystring: %s\n", s1);
+    fclose(filein);
+    int status = system(s1);
+    */
+    //system("shuf aspell_wordlist.txt >sp3.txt", filename);
+    FILE *file;
+    if((file = fopen(filename, "r")) == NULL){
+        printf("file %s doesn't exist.\n", filename);
+    }   
+
+
+    else {
+        char* word;
+        while(fscanf(file,"%100s",word) != EOF){
+            word = checkAndCopy2(word);
+            //printf("search: %s\n", word);
+            searchRBT(t, word);
+        }
+
+    }
+    fclose(file);
+}
+
+
+
 void createHMAP(Tree* t, int modulo, int n){
     t->type = HMAP;
     t->data.hmap = malloc(sizeof(hashMap));
@@ -869,9 +1000,11 @@ void findHMAP(hashMap* m, char* key2){
     char* key = checkAndCopy2(key2);
     int hashIndex = hash(key, m->modulo);
     if (m->data[hashIndex]->size < m->switchSize){
+        //printf("findValueList\n");
         findValueList(m->data[hashIndex]->structure.list, key);
     }
     else{
+        //printf("findRBT\n");
         findRBT(m->data[hashIndex]->structure.tree, key);
     }
 }
@@ -900,8 +1033,30 @@ void loadHMAP(hashMap* m, char* filename){
     }
 }
 
+void del_loadHMAP(hashMap* m, char* filename){
+    FILE *filein;
+    if((filein = fopen(filename, "r")) == NULL){
+        printf("file %s doesn't exist.\n",filename);
+    }
+    char* s1;
+    strcpy(s1, "shuf "); 
+    strcat(s1, filename);
+    strcat(s1, " >sp4.txt");
+    system(s1);
 
-///////////////////////////////////////////////////////// OTHER //////////////////////////////////////////////////////////////
+    //system("shuf aspell_wordlist.txt >sp3.txt", filename);
+    FILE *file;
+    if((file = fopen("sp4.txt", "r")) == NULL){
+        printf("file %s doesn't exist.\n",filename);
+    }    
+    else {
+        char word[101];
+        while(fscanf(file,"%100s",word) != EOF){
+            deleteHMAP(m, word);
+        }
+    }
+}
+
 
 
 int length(char* word){
@@ -1029,6 +1184,27 @@ void executeCommands(int n, Tree* tree){
             }
             loads++;
         }
+        else if(!strcmp(command,"del_load")){
+            scanf("%100s",word);
+            switch(tree->type){
+                case BST:
+                    del_loadBST(tree->data.bst,word);
+                    if(tree->data.bst->size > maxsize)
+                        maxsize = tree->data.bst->size;
+                    break;
+                case RBT:
+                    del_loadRBT(tree->data.rbt,word);
+                    if(tree->data.rbt->size > maxsize)
+                        maxsize = tree->data.rbt->size;
+                    break;
+                case HMAP:
+                    del_loadHMAP(tree->data.hmap,word);
+                    if(tree->data.hmap->size > maxsize)
+                        maxsize = tree->data.hmap->size;
+                    break;
+            }
+            //loads++;
+        }
         else if(!strcmp(command,"delete")){
             scanf("%100s",word);
             switch(tree->type){
@@ -1152,18 +1328,3 @@ void executeCommands(int n, Tree* tree){
     fprintf(stderr, "Size at end: %d\n",size);
 }
 
-int main (int argc, char* argv[]){
-    if(argc != 3) return 1;    
-
-    Tree* tree = malloc(sizeof(Tree));
-    chooseTree(argv, tree);    
-    
-    int n;
-    scanf("%d",&n);
-    executeCommands(n, tree); 
-    
-    destroyTree(tree);
-    free(tree);
-    
-    return 0;
-}

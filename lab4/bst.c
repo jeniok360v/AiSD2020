@@ -40,7 +40,7 @@ void bst_insert_convert(char **x);
 void bst_inorder(struct bst_node *root);
 void print(struct bst_node *root);
 
-
+void rbt_new_node(Tree* t);
 
 
 
@@ -86,7 +86,7 @@ void load_file(struct bst_node **root, char filename[]){
 
     /* do your work here, buffer is a string contains the whole text */ 
     char *string[256];           
-    char delimit[]=" ,.;:!?-()[]{}<>\'\"\n";
+    char delimit[]=" ,.;:!?-()[]{}<>\"\n";
     int i = 0, j = 0;
                                        
     string[i]=strtok(buffer,delimit);    // 5) Make use of i to be explicit 
